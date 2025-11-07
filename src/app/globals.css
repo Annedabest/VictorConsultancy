@@ -2,25 +2,201 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground: #121212;
 }
 
 body {
+  margin: 0;
+  min-height: 100vh;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.page-shell {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.page-shell--narrow {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 60rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.section-pad {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+.section-pad-sm {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@media (max-width: 640px) {
+  .section-pad {
+    padding-top: 4.75rem;
+    padding-bottom: 4.75rem;
+  }
+
+  .section-pad-sm {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-pad {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+
+  .section-pad-sm {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
+
+.hero-gradient,
+.hero-grid,
+.hero-orb {
+  pointer-events: none;
+  position: absolute;
+  inset: auto;
+}
+
+.hero-gradient {
+  inset: -30% -15% -10% -15%;
+  background:
+    radial-gradient(ellipse at top left, rgba(17, 24, 39, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse at top right, rgba(59, 130, 246, 0.18) 0%, transparent 65%),
+    radial-gradient(ellipse at bottom, rgba(244, 114, 182, 0.18) 0%, transparent 70%);
+  filter: saturate(130%);
+  mix-blend-mode: screen;
+  opacity: 0.75;
+}
+
+.hero-grid {
+  inset: -10% -5% -5% -5%;
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+  background-size: 140px 140px;
+  opacity: 0.4;
+  mix-blend-mode: soft-light;
+  mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.hero-orb {
+  border-radius: 9999px;
+  mix-blend-mode: screen;
+  opacity: 0.8;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition: transform 1.2s ease, opacity 1.2s ease;
+}
+
+.hero-orb--primary {
+  top: -16rem;
+  right: -10rem;
+  width: 36rem;
+  height: 36rem;
+  background: radial-gradient(circle at center, rgba(37, 99, 235, 0.28) 0%, rgba(37, 99, 235, 0.05) 60%, transparent 75%);
+}
+
+.hero-orb--secondary {
+  bottom: -14rem;
+  left: -12rem;
+  width: 32rem;
+  height: 32rem;
+  background: radial-gradient(circle at center, rgba(236, 72, 153, 0.24) 0%, rgba(236, 72, 153, 0.05) 55%, transparent 75%);
+}
+
+.hero-orb--tertiary {
+  top: 40%;
+  left: 45%;
+  width: 22rem;
+  height: 22rem;
+  background: radial-gradient(circle at center, rgba(14, 165, 233, 0.22) 0%, rgba(14, 165, 233, 0.05) 55%, transparent 75%);
+  filter: blur(6px);
+  opacity: 0.6;
+}
+
+.hero-zone {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-zone:hover .hero-orb--primary,
+.hero-zone:focus-within .hero-orb--primary {
+  transform: translate3d(12px, -8px, 0) scale(1.08);
+  opacity: 0.92;
+}
+
+.hero-zone:hover .hero-orb--secondary,
+.hero-zone:focus-within .hero-orb--secondary {
+  transform: translate3d(-14px, 10px, 0) scale(1.06);
+  opacity: 0.88;
+}
+
+.hero-zone:hover .hero-orb--tertiary,
+.hero-zone:focus-within .hero-orb--tertiary {
+  transform: translate3d(6px, -6px, 0) scale(1.1);
+  opacity: 0.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb,
+  .hero-zone:hover .hero-orb--primary,
+  .hero-zone:hover .hero-orb--secondary,
+  .hero-zone:hover .hero-orb--tertiary,
+  .hero-zone:focus-within .hero-orb--primary,
+  .hero-zone:focus-within .hero-orb--secondary,
+  .hero-zone:focus-within .hero-orb--tertiary {
+    transform: none !important;
+    opacity: 0.85;
+    transition: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-gradient {
+    inset: -40% -25% -15% -25%;
+  }
+
+  .hero-grid {
+    background-size: 110px 110px;
+    opacity: 0.35;
+  }
+
+  .hero-orb--primary {
+    top: -14rem;
+    right: -12rem;
+    width: 28rem;
+    height: 28rem;
+  }
+
+  .hero-orb--secondary {
+    bottom: -12rem;
+    left: -10rem;
+    width: 24rem;
+    height: 24rem;
+  }
+
+  .hero-orb--tertiary {
+    left: 35%;
+    width: 16rem;
+    height: 16rem;
+  }
 }

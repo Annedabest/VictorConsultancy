@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Victor Consultancy Site
 
-## Getting Started
+Strategic AI adoption hub for Anne Victor. Built with Next.js 15 (App Router), Tailwind CSS v4, and Supabase for authentication, data, and storage. The site delivers:
 
-First, run the development server:
+- Hero-led homepage with AI adoption value proposition
+- Solution, industry, and assessment pages
+- Client portal roadmap and resource library
+- Automation hooks for insights/blog and LinkedIn workflows
+
+## Stack
+
+- **Frontend**: Next.js 15 App Router, React 19, Tailwind CSS v4
+- **Auth/DB**: Supabase (Postgres + Row-Level Security)
+- **CMS (planned)**: Headless (Sanity/Contentful) via `CMS_PREVIEW_*` environment variables
+- **Automation**: Zapier/n8n integration points for publishing and CRM syncing
+- **Deployment**: Vercel + Cloudflare DNS
+
+## Local Setup
 
 ```bash
+git clone https://github.com/<org>/victor-consultancy
+cd victor-consultancy
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Populate `.env.local`:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+CMS_PREVIEW_BASE_URL=...
+CMS_PREVIEW_TOKEN=...
+SUPABASE_SERVICE_ROLE_KEY=...
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Supabase
 
-## Learn More
+Migration files live in `supabase/migrations/`. The first migration creates `assessment_session_requests` with RLS policies to allow anonymous inserts and service-role reads.
 
-To learn more about Next.js, take a look at the following resources:
+Apply migrations:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npx supabase db push
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Service role secrets should be stored securely (e.g., Supabase project settings, Vercel env vars). The `SUPABASE_SERVICE_ROLE_KEY` is only required for backend cron jobs or CMS automations; never expose it to the client.
 
-## Deploy on Vercel
+## CMS Preview
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`src/lib/cms.ts` fetches featured insights/resources. Without environment variables set, it falls back to curated defaults. Configure a headless CMS endpoint exposing `/insights` and `/resources` JSON lists.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+During local development you can leave `CMS_PREVIEW_BASE_URL` pointed to the built-in API mocks:
+
+```
+CMS_PREVIEW_BASE_URL=/api/cms
+CMS_PREVIEW_TOKEN=
+```
+
+For production, replace the base URL with your CMS (e.g., Sanity, Contentful, Hygraph) preview API and issue a read token.
+
+## Development Notes
+
+- Shared layout in `src/app/layout.tsx` manages navigation, footer, and theming.
+- Assessment form leverages server actions (`src/app/assessment/actions.ts`) for Supabase-backed session requests.
+- Tailwind design tokens tuned for neutral palette with blush accents.
+
+## Roadmap
+
+- Client portal authentication + resource delivery
+- Supabase-managed readiness assessment scoring and PDF reports
+- CMS integration for insights hub, resource library, and academy updates
+- Automation workflows (blog → LinkedIn, download → CRM)
